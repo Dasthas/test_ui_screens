@@ -89,7 +89,6 @@ namespace Modules.UI.Screens.SelectCharacterScreen
                 _testIncreaseExpButton.HideButtonAsync(settings, ct),
                 _elementsContent.DOMoveY(-_elementsContent.sizeDelta.y * 1.2f, settings.HideTime * 2)
                     .ToUniTask(cancellationToken: OnDestroyCancellationToken));
-
             await base.HideAsync(ct);
 
             _closeButton.HideButtonImmediately(settings);

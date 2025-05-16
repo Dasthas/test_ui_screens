@@ -12,6 +12,7 @@ namespace Modules.Extensions
     {
         public static UniTask ShowButtonAsync(this Button button, IScreenSettings settings, CancellationToken ct)
         {
+            ct.ThrowIfCancellationRequested();
             switch (settings.SimpleAnimationType)
             {
                 case UISimpleAnimationType.Fade:
@@ -35,6 +36,7 @@ namespace Modules.Extensions
 
         public static UniTask HideButtonAsync(this Button button, IScreenSettings settings, CancellationToken ct)
         {
+            ct.ThrowIfCancellationRequested();
             switch (settings.SimpleAnimationType)
             {
                 case UISimpleAnimationType.Fade:

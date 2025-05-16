@@ -36,11 +36,10 @@ namespace Modules.UI.Screens.MainScreen
 
         #endregion
 
-        public override async UniTask ShowAsync(CancellationToken ct)
+        public override UniTask ShowAsync(CancellationToken ct)
         {
-            await base.ShowAsync(ct);
             var settings = _buttonsScreenSettings;
-            await UniTask.WhenAll(
+            return UniTask.WhenAll(base.ShowAsync(ct),
                 _playButton.ShowButtonAsync(settings, ct),
                 _exitGameButton.ShowButtonAsync(settings, ct),
                 _settingsButton.ShowButtonAsync(settings, ct),
@@ -48,10 +47,10 @@ namespace Modules.UI.Screens.MainScreen
             );
         }
 
-        public override async UniTask HideAsync(CancellationToken ct)
+        public override UniTask HideAsync(CancellationToken ct)
         {
             var settings = _buttonsScreenSettings;
-            await UniTask.WhenAll(
+            return UniTask.WhenAll(
                 base.HideAsync(ct),
                 _playButton.HideButtonAsync(settings, ct),
                 _exitGameButton.HideButtonAsync(settings, ct),

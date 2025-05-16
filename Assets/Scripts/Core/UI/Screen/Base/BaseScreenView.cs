@@ -28,47 +28,49 @@ namespace Core.UI.Screen.Base
             Model = model;
         }
 
-        public virtual async UniTask ShowAsync(CancellationToken ct)
+        public virtual UniTask ShowAsync(CancellationToken ct)
         {
             _graphicRaycaster.enabled = true;
             var settings = Model.Settings;
+
             switch (settings.SimpleAnimationType)
             {
                 case UISimpleAnimationType.Fade:
-                    await _canvasGroup
+                    _canvasGroup.DOKill(true);
+                    return _canvasGroup
                         .DOFade(1, settings.ShowTime)
                         .SetEase(settings.ShowEase)
                         .ToUniTask(cancellationToken: OnDestroyCancellationToken);
-                    break;
                 case UISimpleAnimationType.Scale:
-                    await _mainRectTransform
+                    _mainRectTransform.DOKill(true);
+                    return _mainRectTransform
                         .DOScale(1, settings.ShowTime)
                         .SetEase(settings.ShowEase)
                         .ToUniTask(cancellationToken: OnDestroyCancellationToken);
-                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
 
-        public virtual async UniTask HideAsync(CancellationToken ct)
+        public virtual UniTask HideAsync(CancellationToken ct)
         {
             _graphicRaycaster.enabled = false;
             var settings = Model.Settings;
+
             switch (settings.SimpleAnimationType)
             {
                 case UISimpleAnimationType.Fade:
-                    await _canvasGroup
+                    _canvasGroup.DOKill(true);
+                    return _canvasGroup
                         .DOFade(0, settings.HideTime)
                         .SetEase(settings.HideEase)
                         .ToUniTask(cancellationToken: OnDestroyCancellationToken);
-                    break;
                 case UISimpleAnimationType.Scale:
-                    await _mainRectTransform
+                    _mainRectTransform.DOKill(true);
+                    return _mainRectTransform
                         .DOScale(0, settings.HideTime)
                         .SetEase(settings.HideEase)
                         .ToUniTask(cancellationToken: OnDestroyCancellationToken);
-                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -81,9 +83,11 @@ namespace Core.UI.Screen.Base
             switch (settings.SimpleAnimationType)
             {
                 case UISimpleAnimationType.Fade:
+                    _canvasGroup.DOKill(true);
                     _canvasGroup.alpha = 0;
                     break;
                 case UISimpleAnimationType.Scale:
+                    _mainRectTransform.DOKill(true);
                     _mainRectTransform.localScale = Vector3.zero;
                     break;
                 default:

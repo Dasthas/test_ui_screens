@@ -89,6 +89,7 @@ namespace Modules.UI.Screens.SelectCharacterScreen
         private void Clear()
         {
             Model.CharacterElements.Clear();
+            Model.SelectedCharacterIndex = -1;
         }
 
         private void InitSubscribes()

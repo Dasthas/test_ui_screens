@@ -55,6 +55,7 @@ namespace Modules.UI.Buttons
                 return;
             }
 
+            _button.DOKill(true);
             switch (settings.SimpleAnimationType)
             {
                 case UISimpleAnimationType.Fade:
@@ -62,14 +63,14 @@ namespace Modules.UI.Buttons
                         .DOFade(settings.EndValue, settings.Duration)
                         .SetEase(settings.Ease)
                         .SetTarget(_button)
-                        .ToUniTask(cancellationToken: gameObject.GetCancellationTokenOnDestroy());
+                        .ToUniTask(cancellationToken: gameObject.GetCancellationTokenOnDestroy()).Forget();
                     break;
                 case UISimpleAnimationType.Scale:
                     _button.image.rectTransform
                         .DOScale(settings.EndValue, settings.Duration)
                         .SetEase(settings.Ease)
                         .SetTarget(_button)
-                        .ToUniTask(cancellationToken: gameObject.GetCancellationTokenOnDestroy());
+                        .ToUniTask(cancellationToken: gameObject.GetCancellationTokenOnDestroy()).Forget();
                     break;
             }
         }
