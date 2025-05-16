@@ -1,9 +1,10 @@
+using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 
-namespace Core.UI.Screen
+namespace Core.UI.Screen.Base
 {
-    public abstract class BaseScreenController<TView, TModel> : IScreenController
+    public abstract class BaseScreenController<TView, TModel> : IScreenController<TView, TModel>, IDisposable
         where TView : IScreenView<TModel>
         where TModel : IScreenModel
     {
@@ -12,13 +13,16 @@ namespace Core.UI.Screen
 
         protected CancellationTokenSource CancellationTokenSource { get; set; }
 
-        protected BaseScreenController(TModel model, TView view)
+        public void Initialize(TView view, TModel model)
         {
             Model = model;
             View = view;
-            View.LinkModel(model);
+            View.Initialize(model);
             CancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(View.OnDestroyCancellationToken);
+            OnInitialize();
         }
+        
+        protected abstract void OnInitialize();
 
         public virtual async UniTask ShowAsync(CancellationToken ct)
         {
@@ -40,9 +44,22 @@ namespace Core.UI.Screen
             await OnAfterHideAsync(ct);
         }
 
+        /// <summary>
+        /// when you call this method and object have subscribes to events, you need to dispose them manually
+        /// </summary>
+        public virtual void HideImmediately()
+        {
+            View.HideImmediately();
+        }
+
         protected abstract UniTask OnBeforeShowAsync(CancellationToken ct);
         protected abstract UniTask OnAfterShowAsync(CancellationToken ct);
         protected abstract UniTask OnBeforeHideAsync(CancellationToken ct);
         protected abstract UniTask OnAfterHideAsync(CancellationToken ct);
+
+        public virtual void Dispose()
+        {
+            CancellationTokenSource?.Dispose();
+        }
     }
 }
