@@ -3,6 +3,7 @@ using Core.Settings.Screen;
 using Core.UI.Screen.Base;
 using Core.UI.Screen.Closable;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using Modules.Extensions;
 using Modules.UI.Screens.SelectCharacterScreen.CharacterElement;
 using UnityEngine;
@@ -17,7 +18,7 @@ namespace Modules.UI.Screens.SelectCharacterScreen
         [SerializeField] private Button _testIncreaseExpButton;
         [SerializeField] private CharacterElementView _characterElementViewPrefab;
         [SerializeField] private RectTransform _elementsContent;
-        [SerializeField] private GridLayoutGroup _gridLayoutGroup;
+        [SerializeField] private ScrollRect _scrollRect;
 
         [Header("SelectedCharacter")] [SerializeField]
         private RectTransform _selectedCharacterContainer;
@@ -59,6 +60,7 @@ namespace Modules.UI.Screens.SelectCharacterScreen
 
         public override async UniTask ShowAsync(CancellationToken ct)
         {
+            _scrollRect.enabled = true;
             await base.ShowAsync(ct);
             var settings = _closeButtonScreenSettings;
             await UniTask.WhenAll(_testIncreaseExpButton.ShowButtonAsync(settings, ct),
@@ -81,11 +83,15 @@ namespace Modules.UI.Screens.SelectCharacterScreen
 
         public override async UniTask HideAsync(CancellationToken ct)
         {
+            _scrollRect.enabled = false;
             var settings = _closeButtonScreenSettings;
             await UniTask.WhenAll(_closeButton.HideButtonAsync(settings, ct),
-                _testIncreaseExpButton.HideButtonAsync(settings, ct));
+                _testIncreaseExpButton.HideButtonAsync(settings, ct),
+                _elementsContent.DOMoveY(-_elementsContent.sizeDelta.y * 1.2f, settings.HideTime * 2)
+                    .ToUniTask(cancellationToken: OnDestroyCancellationToken));
+
             await base.HideAsync(ct);
-            
+
             _closeButton.HideButtonImmediately(settings);
 
             // can be improved using pool

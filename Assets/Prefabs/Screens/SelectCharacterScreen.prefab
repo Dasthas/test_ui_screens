@@ -61,7 +61,7 @@ MonoBehaviour:
   _testIncreaseExpButton: {fileID: 6187531916711093028}
   _characterElementViewPrefab: {fileID: 1915383614230011877, guid: 8f75215e8a9fe224e863e6cccf16e951, type: 3}
   _elementsContent: {fileID: 4551606859697605085}
-  _gridLayoutGroup: {fileID: 0}
+  _scrollRect: {fileID: 8373468653320705253}
   _selectedCharacterContainer: {fileID: 3248795940820899370}
 --- !u!223 &5343894617361083377
 Canvas:
@@ -171,7 +171,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: 468}
-  m_SizeDelta: {x: 100, y: -1820}
+  m_SizeDelta: {x: 0, y: -1820}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &4173661220119224165
 GameObject:
