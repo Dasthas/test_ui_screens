@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Core.Settings.Screen
 {
-    [CreateAssetMenu(fileName = "ScreenSetting", menuName = "Create/Setting/ScreenSetting")]
+    [CreateAssetMenu(fileName = "ScreenAnimationSettings", menuName = "Setting/ScreenAnimationSettings")]
     public class ScreenSettings : ScriptableObject, IScreenSettings
     {
         [SerializeField] private UISimpleAnimationType _simpleAnimationType;
