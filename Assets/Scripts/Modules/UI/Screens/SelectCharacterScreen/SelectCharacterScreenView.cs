@@ -47,8 +47,12 @@ namespace Modules.UI.Screens.SelectCharacterScreen
         {
             var view = Instantiate(_characterElementViewPrefab, _selectedCharacterContainer);
             view.Initialize(newCharacterElement.Model);
-            view.AnimatedButton.SetRaycaster(Raycaster);
+            view.AnimatedButton.SetRaycaster(null);
             view.HideImmediately();
+
+            await view.SetLvlNumberAsync(newCharacterElement.Model.LevelNumber, 0);
+            await view.IncreaseExpAsync(0, newCharacterElement.Model.Exp, 100, 0);
+
             await view.ShowAsync(ct);
             if (_selectedCharacterElement != null)
             {

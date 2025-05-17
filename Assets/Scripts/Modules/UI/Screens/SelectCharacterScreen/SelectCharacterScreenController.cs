@@ -12,7 +12,7 @@ namespace Modules.UI.Screens.SelectCharacterScreen
 
     {
         private const int MAX_EXP_PER_LEVEL = 100;
-        private const float ANIM_DUR = 0.4f;
+        private const float ANIM_DUR = 1.4f;
 
         #region BaseScreenController
 
@@ -76,7 +76,6 @@ namespace Modules.UI.Screens.SelectCharacterScreen
 
         private void Unsubscribe()
         {
-            
             foreach (var characterElementData in Model.CharacterElements)
             {
                 characterElementData.Model.OnClicked -= OnCharacterClicked;
@@ -100,18 +99,23 @@ namespace Modules.UI.Screens.SelectCharacterScreen
 
         private void OnIncreaseExpClicked()
         {
+            // with UniTasks will be easy to process animations for number of levels, and fill value for every new level till current level
+            // but this not implemented, due to the lack of an experience system
             foreach (var characterElementData in Model.CharacterElements)
             {
+                var fromExp = characterElementData.Model.Exp;
                 characterElementData.Model.Exp += 30;
+
                 if (characterElementData.Model.Exp >= MAX_EXP_PER_LEVEL)
                 {
                     characterElementData.Model.Exp -= MAX_EXP_PER_LEVEL;
                     characterElementData.Model.LevelNumber++;
-                    characterElementData.View.SetLvlNumber(characterElementData.Model.LevelNumber, ANIM_DUR);
+                    characterElementData.View.SetLvlNumberAsync(characterElementData.Model.LevelNumber, ANIM_DUR / 2)
+                        .Forget();
                 }
 
-                characterElementData.View.IncreaseExp(characterElementData.Model.Exp, MAX_EXP_PER_LEVEL,
-                    ANIM_DUR);
+                characterElementData.View.IncreaseExpAsync(fromExp, characterElementData.Model.Exp, MAX_EXP_PER_LEVEL,
+                    ANIM_DUR).Forget();
             }
         }
 

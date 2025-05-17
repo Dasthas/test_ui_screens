@@ -7,14 +7,12 @@ using DG.Tweening;
 using Modules.UI.Buttons;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Modules.UI.Screens.SelectCharacterScreen.CharacterElement
 {
     public class CharacterElementView : MonoBehaviour, IScreenView<CharacterElementModel>
     {
-        private const int MAX_EXP_PER_LEVEL = 100;
         [SerializeField] private Image _iconImage;
         [SerializeField] private Image _bgImage;
         [SerializeField] private TextMeshProUGUI _titleText;
@@ -96,20 +94,34 @@ namespace Modules.UI.Screens.SelectCharacterScreen.CharacterElement
             _model.OnClicked?.Invoke(_model.Index);
         }
 
-        public void SetLvlNumber(int value, float duration)
+        public UniTask SetLvlNumberAsync(int value, float duration)
         {
             _levelNumberImage.DOKill(true);
             var sequence = DOTween.Sequence(_levelNumberText);
-            sequence.Append(_levelNumberImage.rectTransform.DOScale(1.5f, duration / 2))
-                .AppendCallback(() => _levelNumberText.text = _model.LevelNumber.ToString())
+            return sequence.Append(_levelNumberImage.rectTransform.DOScale(1.5f, duration / 2))
+                .AppendCallback(() => _levelNumberText.text = value.ToString())
                 .Append(_levelNumberImage.rectTransform.DOScale(1, duration / 2))
-                .SetEase(Ease.OutBounce);
+                .SetEase(Ease.OutBounce)
+                .ToUniTask(cancellationToken: _levelExpFillImage.GetCancellationTokenOnDestroy());
         }
 
-        public void IncreaseExp(float toExp, float maxValue, float duration)
+        public UniTask IncreaseExpAsync(float fromExp, float toExp, float maxValue, float duration)
         {
             _levelExpFillImage.DOKill(true);
-            _levelExpFillImage.DOFillAmount(toExp / maxValue, duration);
+            var sequence = DOTween.Sequence(_levelExpFillImage);
+            var animationDuration = duration;
+
+            //should start new level
+            if (fromExp > toExp)
+            {
+                animationDuration /= 2;
+                sequence.Append(_levelExpFillImage.DOFillAmount(1, animationDuration)) // fill to the end
+                    .AppendCallback(() => _levelExpFillImage.fillAmount = 0); // set to 0 when reaching the end
+            }
+
+            return sequence.Append(_levelExpFillImage.DOFillAmount(toExp / maxValue, animationDuration))
+                .SetEase(Ease.OutCirc)
+                .ToUniTask(cancellationToken: _levelExpFillImage.GetCancellationTokenOnDestroy());
         }
     }
 }
