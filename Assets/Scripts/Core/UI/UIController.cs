@@ -94,7 +94,7 @@ namespace Core.UI
 
             InitializeScreen<MainScreenController, MainScreenModel, MainScreenView>(true);
             InitializeScreen<SettingsScreenController, SettingsScreenModel, SettingsScreenView>(true);
-            ShowScreenAsync<MainScreenController>();
+            ShowScreenAsync<MainScreenController>().Forget();
         }
 
         public void Dispose()
