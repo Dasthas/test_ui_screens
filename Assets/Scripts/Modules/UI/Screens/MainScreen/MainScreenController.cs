@@ -27,15 +27,13 @@ namespace Modules.UI.Screens.MainScreen
 
         protected override UniTask OnAfterShowAsync(CancellationToken ct)
         {
-            Debug.Log("InitSubscribes");
             InitSubscribes();
             return UniTask.CompletedTask;
         }
 
         protected override UniTask OnBeforeHideAsync(CancellationToken ct)
         {
-            Debug.Log("Dispose");
-            DisposeSubscribes();
+            Unsubscribe();
             return UniTask.CompletedTask;
         }
 
@@ -48,12 +46,12 @@ namespace Modules.UI.Screens.MainScreen
         public override void Dispose()
         {
             base.Dispose();
-            DisposeSubscribes();
+            Unsubscribe();
         }
 
         #endregion
 
-        private void DisposeSubscribes()
+        private void Unsubscribe()
         {
             Model.OnPlayButtonClicked -= OnPlayButtonClicked;
             Model.OnExitGameButtonClicked -= OnExitGameButtonClicked;
